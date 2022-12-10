@@ -1,0 +1,123 @@
+<%- include('partials/header'); -%>
+
+
+
+<form>
+    <h2>Sign Up</h2>
+    <label for="email">Email</label>
+    <input type="text" name="email">
+    <div class="email error"></div>
+    <label for="Password">Password</label>
+    <input type="password" name="Password">
+    <div class="password error"></div>
+    <button>Sign up</button>   
+</form>
+
+
+
+  <!-- otp -->
+
+  <form id="otp" style="display:none;" class="col-md-6 px-5">
+    <div class="form-group">
+  
+      <input type="text" class="form-control" id="otpinp" placeholder="" name="otpvalue">
+      <label class="mb-2 mt-2">Enter the OTP</label>
+  
+    </div>
+  
+    <div class="text-center">
+      <a href="#myModal" class="btn btn-danger" data-toggle="modal" id="otpbtn">Verify</a>
+    </div>
+  </form>
+<!-- </div> -->
+
+
+
+
+<!-- modal -->
+
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <div class="icon-box">
+          <i class="material-icons"></i>
+        </div> -->
+        </div>
+        <div class="modal-body">
+          <p class="text-center responsetext h5"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+  
+    </div>
+  
+  </div>
+<!-- <script>
+        $('.toggle').click(function(){
+          // Switches the Icon
+          $(this).children('i').toggleClass('fa-pencil');
+          // Switches the forms  
+          $('.form').animate({
+            height: "toggle",
+            'padding-top': 'toggle',
+            'padding-bottom': 'toggle',
+            opacity: "toggle"
+          }, "slow");
+        });
+    </script>
+  
+
+ -->
+
+
+<script>
+    const form = document.querySelector("form")   
+    const emailError = document.querySelector(".email.error")  
+    const passwordError = document.querySelector(".password.error") 
+
+    form.addEventListener("submit", async (e) => {    
+        e.preventDefault()
+
+    //reset errors
+    emailError.textContent = ""
+    passwordError.textContent = ""
+
+
+     //get the values
+        const email = form.email.value;
+        const Password = form.Password.value;   
+
+       try {
+        const result = await fetch ("/signup", {
+            method : "post",
+            body : JSON.stringify({ email, Password }),
+            headers : { "Content-Type" : "application/json" }
+        })
+        const data = await result.json()
+        console.log(data);
+        if(data.errors) {
+            emailError.textContent = data.errors.email
+            passwordError.textContent = data.errors.Password
+        }
+        if (data.user){
+            location.assign("/")
+        }
+       }
+       catch(err){
+        console.log(err);
+       }
+
+    })
+
+
+
+</script>
+
+
+<%- include('partials/footer'); -%>
+
+
+
